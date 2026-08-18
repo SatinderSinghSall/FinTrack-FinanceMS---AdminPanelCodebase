@@ -118,6 +118,16 @@ export default function BudgetsPage() {
     loadBudgets();
   }, [page]);
 
+  // Prevent background scrolling when any modal is open
+  const isModalOpen = Boolean(viewBudget || editBudget || deleteBudget);
+
+  useEffect(() => {
+    document.body.style.overflow = isModalOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isModalOpen]);
+
   /*
   |--------------------------------------------------------------------------
   | View Budget

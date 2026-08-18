@@ -1,6 +1,22 @@
 "use client";
 
-import { X } from "lucide-react";
+import {
+  X,
+  CreditCard,
+  Calendar,
+  Clock,
+  RefreshCw,
+  Bell,
+  Wallet,
+  Tag,
+  AlignLeft,
+  Hash,
+  User,
+  Activity,
+  Layers,
+  Palette,
+  Sparkles,
+} from "lucide-react";
 
 type Subscription = {
   _id: string;
@@ -76,118 +92,207 @@ export default function ViewSubscriptionModal({
     return null;
   }
 
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-[2px]"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
-          onClose();
-        }
-      }}
-    >
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl">
-        <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-4 sm:px-6">
-          <div>
-            <h2 className="text-base font-semibold text-zinc-900">
-              Subscription Details
-            </h2>
+  const isActive = subscription.status === "active";
 
-            <p className="mt-0.5 text-xs text-zinc-400">
-              Complete subscription information
-            </p>
+  return (
+    /* Backdrop layer - Backdrop clicks do NOT trigger onClose */
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 p-4 backdrop-blur-md transition-all">
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white/95 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] backdrop-blur-xl">
+        {/* Decorative Top Accent Bar */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-zinc-900 via-zinc-700 to-zinc-900" />
+
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-zinc-100/80 px-6 py-5">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-900 text-white shadow-md shadow-zinc-900/10">
+              <CreditCard size={22} strokeWidth={1.8} />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold tracking-tight text-zinc-900">
+                Subscription Details
+              </h2>
+              <p className="text-xs font-medium text-zinc-400">
+                Complete billing and renewal details
+              </p>
+            </div>
           </div>
 
+          {/* Top-Right X Icon Button - ONLY WAY TO CLOSE FROM HEADER */}
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700"
+            className="group flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200/60 bg-zinc-50/50 text-zinc-400 transition-all duration-200 hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-700 active:scale-95"
             aria-label="Close"
           >
-            <X size={18} />
+            <X
+              size={18}
+              strokeWidth={2}
+              className="transition-transform duration-200 group-hover:rotate-90"
+            />
           </button>
         </div>
 
-        <div className="max-h-[75vh] overflow-y-auto p-5 sm:p-6">
-          <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
-            <Detail label="Name" value={subscription.name || "—"} />
+        {/* Body Content */}
+        <div className="max-h-[72vh] overflow-y-auto p-6 space-y-5">
+          {/* Main Hero Card */}
+          <div className="rounded-2xl border border-zinc-200/80 bg-gradient-to-br from-zinc-50/80 via-white to-zinc-50/50 p-5 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="space-y-1">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+                  Service Name
+                </span>
+                <h3 className="text-xl font-bold text-zinc-900">
+                  {subscription.name || "—"}
+                </h3>
+              </div>
 
-            <Detail label="Category" value={subscription.category || "Other"} />
+              <div className="text-right">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+                  Recurring Cost
+                </span>
+                <p className="text-xl font-bold text-zinc-900">
+                  {formatCurrency(subscription.amount, subscription.currency)}
+                  <span className="text-xs font-medium text-zinc-400 ml-1">
+                    / {subscription.billingCycle || "cycle"}
+                  </span>
+                </p>
+              </div>
+            </div>
 
-            <Detail
-              label="Amount"
-              value={formatCurrency(subscription.amount, subscription.currency)}
-            />
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-zinc-100 pt-3.5">
+              {/* Status Indicator Pill */}
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium shadow-sm ${
+                  isActive
+                    ? "border-emerald-200/60 bg-emerald-50 text-emerald-700"
+                    : "border-zinc-200 bg-zinc-100 text-zinc-600"
+                }`}
+              >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    isActive ? "bg-emerald-500 animate-pulse" : "bg-zinc-400"
+                  }`}
+                />
+                {isActive ? "Active Subscription" : "Cancelled"}
+              </span>
 
-            <Detail label="Currency" value={subscription.currency || "INR"} />
+              {/* Auto Renew Badge */}
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200/60 bg-white px-3 py-1 text-xs font-medium text-zinc-700 shadow-sm">
+                <RefreshCw size={12} className="text-zinc-500" />
+                Auto-Renew: {subscription.autoRenew ? "Enabled" : "Disabled"}
+              </span>
 
-            <Detail
+              {/* Category Pill */}
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200/60 bg-white px-3 py-1 text-xs font-medium text-zinc-700 shadow-sm">
+                <Tag size={12} className="text-zinc-500" />
+                {subscription.category || "Other"}
+              </span>
+            </div>
+          </div>
+
+          {/* Grid Layout for Detailed Fields */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <DetailItem
+              icon={<Layers size={16} className="text-zinc-500" />}
               label="Billing Cycle"
               value={formatCycle(subscription.billingCycle)}
             />
 
-            <Detail
-              label="Status"
-              value={subscription.status === "active" ? "Active" : "Cancelled"}
-            />
-
-            <Detail
-              label="Start Date"
-              value={formatDate(subscription.startDate)}
-            />
-
-            <Detail
-              label="Next Renewal"
-              value={formatDate(subscription.nextRenewalDate)}
-            />
-
-            <Detail
-              label="Reminder"
-              value={
-                typeof subscription.reminderDaysBefore === "number"
-                  ? `${subscription.reminderDaysBefore} day(s) before`
-                  : "—"
-              }
-            />
-
-            <Detail
-              label="Auto Renew"
-              value={subscription.autoRenew ? "Enabled" : "Disabled"}
-            />
-
-            <Detail
+            <DetailItem
+              icon={<Wallet size={16} className="text-zinc-500" />}
               label="Payment Method"
               value={subscription.paymentMethod || "—"}
             />
 
-            <Detail label="Color" value={subscription.color || "—"} />
+            <DetailItem
+              icon={<Calendar size={16} className="text-zinc-500" />}
+              label="Start Date"
+              value={formatDate(subscription.startDate)}
+            />
 
-            <Detail label="Icon" value={subscription.icon || "—"} />
+            <DetailItem
+              icon={<Clock size={16} className="text-zinc-500" />}
+              label="Next Renewal Date"
+              value={formatDate(subscription.nextRenewalDate)}
+            />
 
-            <Detail label="User ID" value={subscription.userId || "—"} mono />
+            <DetailItem
+              icon={<Bell size={16} className="text-zinc-500" />}
+              label="Reminder Settings"
+              value={
+                typeof subscription.reminderDaysBefore === "number"
+                  ? `${subscription.reminderDaysBefore} day(s) before renewal`
+                  : "—"
+              }
+            />
 
-            <Detail label="Subscription ID" value={subscription._id} mono />
+            <DetailItem
+              icon={<Palette size={16} className="text-zinc-500" />}
+              label="Theme Customization"
+              value={
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span>Icon: {subscription.icon || "—"}</span>
+                  {subscription.color && (
+                    <div className="flex items-center gap-1.5 border-l border-zinc-200 pl-2">
+                      <span
+                        className="h-3.5 w-3.5 rounded-full border border-black/10"
+                        style={{ backgroundColor: subscription.color }}
+                      />
+                      <span className="font-mono text-xs text-zinc-600">
+                        {subscription.color}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              }
+            />
 
-            <Detail
-              label="Created"
+            <DetailItem
+              icon={<User size={16} className="text-zinc-500" />}
+              label="Associated User ID"
+              value={subscription.userId || "—"}
+              mono
+            />
+
+            <DetailItem
+              icon={<Hash size={16} className="text-zinc-500" />}
+              label="Subscription ID"
+              value={subscription._id}
+              mono
+            />
+
+            <DetailItem
+              icon={<Calendar size={16} className="text-zinc-500" />}
+              label="Created At"
               value={formatDate(subscription.createdAt)}
             />
 
-            <Detail
-              label="Updated"
+            <DetailItem
+              icon={<Activity size={16} className="text-zinc-500" />}
+              label="Last Updated"
               value={formatDate(subscription.updatedAt)}
             />
+          </div>
 
-            <div className="sm:col-span-2">
-              <Detail label="Notes" value={subscription.notes?.trim() || "—"} />
+          {/* Notes Container */}
+          <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <AlignLeft size={14} className="text-zinc-500" />
+              <span>Notes & Description</span>
             </div>
+            <p className="mt-2 text-xs leading-relaxed text-zinc-700 whitespace-pre-wrap">
+              {subscription.notes?.trim() ||
+                "No additional notes specified for this subscription."}
+            </p>
           </div>
         </div>
 
-        <div className="flex justify-end border-t border-zinc-100 px-5 py-4 sm:px-6">
+        {/* Footer */}
+        <div className="flex items-center justify-end border-t border-zinc-100 bg-zinc-50/50 px-6 py-4">
           <button
             type="button"
             onClick={onClose}
-            className="h-10 rounded-xl bg-zinc-900 px-5 text-sm font-medium text-white transition hover:bg-zinc-800"
+            className="inline-flex h-10 items-center justify-center rounded-xl bg-zinc-900 px-6 text-sm font-semibold text-white shadow-lg shadow-zinc-900/10 transition-all duration-200 hover:bg-zinc-800 hover:shadow-zinc-900/20 active:scale-95"
           >
             Close
           </button>
@@ -197,26 +302,38 @@ export default function ViewSubscriptionModal({
   );
 }
 
-function Detail({
+function DetailItem({
+  icon,
   label,
   value,
   mono = false,
 }: {
+  icon: React.ReactNode;
   label: string;
-  value: string;
+  value: React.ReactNode;
   mono?: boolean;
 }) {
   return (
-    <div>
-      <p className="text-xs font-medium text-zinc-400">{label}</p>
-
-      <p
-        className={`mt-1 break-words text-zinc-900 ${
-          mono ? "font-mono text-xs" : "text-sm font-medium"
-        }`}
-      >
-        {value}
-      </p>
+    <div className="flex items-start gap-3 rounded-2xl border border-zinc-200/60 bg-white p-3.5 shadow-sm transition-all hover:border-zinc-300/80">
+      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-zinc-100">
+        {icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+          {label}
+        </p>
+        {typeof value === "string" ? (
+          <p
+            className={`mt-0.5 break-all text-xs text-zinc-900 ${
+              mono ? "font-mono font-medium text-zinc-700" : "font-semibold"
+            }`}
+          >
+            {value}
+          </p>
+        ) : (
+          <div className="text-xs font-semibold text-zinc-900">{value}</div>
+        )}
+      </div>
     </div>
   );
 }

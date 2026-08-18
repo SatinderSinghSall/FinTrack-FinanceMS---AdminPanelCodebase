@@ -105,6 +105,16 @@ export default function SavingsPage() {
     loadSavings();
   }, [page]);
 
+  // Prevent background scrolling when any modal is open
+  const isModalOpen = Boolean(viewSaving || editSaving || deleteSaving);
+
+  useEffect(() => {
+    document.body.style.overflow = isModalOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isModalOpen]);
+
   const handleView = async (saving: Saving) => {
     try {
       setError("");

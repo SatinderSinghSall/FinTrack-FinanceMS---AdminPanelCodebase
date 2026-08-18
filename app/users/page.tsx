@@ -85,6 +85,24 @@ export default function UsersPage() {
   }, [page]);
 
   /* --------------------------------
+   PREVENT BODY SCROLL WHEN MODAL OPEN
+  -------------------------------- */
+  useEffect(() => {
+    const isModalOpen = Boolean(viewUser || editUser || deleteUser);
+
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    // Clean up on component unmount
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [viewUser, editUser, deleteUser]);
+
+  /* --------------------------------
      VIEW USER
   -------------------------------- */
 

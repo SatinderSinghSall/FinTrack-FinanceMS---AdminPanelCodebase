@@ -109,6 +109,16 @@ export default function IncomesPage() {
     loadIncomes();
   }, [page]);
 
+  // Prevent background scrolling when any modal is open
+  const isModalOpen = Boolean(viewIncome || editIncome || deleteIncome);
+
+  useEffect(() => {
+    document.body.style.overflow = isModalOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isModalOpen]);
+
   const handleView = async (income: Income) => {
     try {
       setError("");

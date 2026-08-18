@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import {
   AlertCircle,
+  ArrowRight,
   CheckCircle2,
   Eye,
   EyeOff,
@@ -22,15 +23,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
-
   const [submitted, setSubmitted] = useState(false);
 
   /* --------------------------------
-     VALIDATION
+      VALIDATION
   -------------------------------- */
 
   const emailError = useMemo(() => {
@@ -72,7 +70,7 @@ export default function LoginPage() {
     !passwordError;
 
   /* --------------------------------
-     FIELD STATES
+      FIELD STATES (Fixed boolean checks)
   -------------------------------- */
 
   const showEmailError = (submitted || email.length > 0) && !!emailError;
@@ -85,11 +83,13 @@ export default function LoginPage() {
   const passwordValid = password.length > 0 && !passwordError;
 
   /* --------------------------------
-     SUBMIT
+      SUBMIT
   -------------------------------- */
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (loading) return;
 
     setSubmitted(true);
     setError("");
@@ -104,7 +104,6 @@ export default function LoginPage() {
 
       const response = await adminApi("/admin/auth/login", {
         method: "POST",
-
         body: JSON.stringify({
           email: email.trim(),
           password,
@@ -124,10 +123,10 @@ export default function LoginPage() {
       }
 
       router.replace("/dashboard");
-    } catch (error) {
+    } catch (err) {
       setError(
-        error instanceof Error
-          ? error.message
+        err instanceof Error
+          ? err.message
           : "Unable to sign in. Please check your credentials and try again.",
       );
     } finally {
@@ -136,11 +135,10 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#f7f7f6]">
+    <main className="relative min-h-screen select-none overflow-hidden bg-[#f7f7f6]">
       {/* --------------------------------
-          BACKGROUND PATTERN
+          BACKGROUND PATTERN & GLOWS
       -------------------------------- */}
-
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.035]"
         style={{
@@ -148,108 +146,76 @@ export default function LoginPage() {
           backgroundSize: "26px 26px",
         }}
       />
-
-      {/* Top glow */}
-
-      <div className="pointer-events-none absolute left-1/2 top-[-120px] h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-zinc-300/20 blur-3xl" />
-
-      {/* Bottom subtle glow */}
-
-      <div className="pointer-events-none absolute bottom-[-180px] left-1/2 h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-zinc-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute left-1/2 top-[-120px] h-[480px] w-[480px] -translate-x-1/2 rounded-full bg-zinc-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-[-180px] left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-zinc-200/30 blur-3xl" />
 
       {/* --------------------------------
-          CONTENT
+          CONTENT (Increased width from max-w-md to max-w-lg)
       -------------------------------- */}
-
       <div className="relative flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 sm:py-12">
-        <div className="w-full max-w-md">
-          {/* --------------------------------
-              BRAND
-          -------------------------------- */}
-
+        <div className="w-full max-w-lg">
+          {/* Brand Header */}
           <div className="mb-7 text-center sm:mb-8">
-            <div className="mx-auto mb-4 flex h-13 w-13 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-lg shadow-zinc-900/10">
-              <span className="text-lg font-semibold tracking-tight">F</span>
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-xl shadow-zinc-950/15 ring-1 ring-white/10 transition-transform hover:scale-[1.02]">
+              <span className="text-xl font-black tracking-tight">F</span>
             </div>
 
             <div className="flex items-center justify-center gap-2">
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 sm:text-3xl">
+              <h1 className="text-2xl font-black tracking-tight text-zinc-950 sm:text-3xl">
                 FinTrack Admin
               </h1>
             </div>
 
-            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-zinc-500">
+            <p className="mx-auto mt-2 max-w-sm text-sm font-medium leading-6 text-zinc-500">
               Securely access your administration dashboard
             </p>
           </div>
 
-          {/* --------------------------------
-              LOGIN CARD
-          -------------------------------- */}
-
-          <div className="rounded-3xl border border-zinc-200/90 bg-white p-5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.18)] sm:p-7">
-            {/* Card heading */}
-
+          {/* Login Card */}
+          <div className="rounded-3xl border border-zinc-200/90 bg-white p-7 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.18)] sm:p-10">
             <div className="mb-6">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100">
-                <ShieldCheck
-                  size={19}
-                  strokeWidth={1.8}
-                  className="text-zinc-700"
-                />
+              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-800 shadow-inner">
+                <ShieldCheck size={21} strokeWidth={2} />
               </div>
 
-              <h2 className="text-lg font-semibold tracking-tight text-zinc-950">
+              <h2 className="text-xl font-extrabold tracking-tight text-zinc-950">
                 Welcome back
               </h2>
 
-              <p className="mt-1 text-sm leading-5 text-zinc-500">
+              <p className="mt-1 text-sm font-medium leading-relaxed text-zinc-500">
                 Sign in with your administrator credentials.
               </p>
             </div>
 
-            {/* --------------------------------
-                MAIN ERROR
-            -------------------------------- */}
-
+            {/* Global Error Banner */}
             {error && (
               <div
                 role="alert"
-                className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-3.5 py-3"
+                className="mb-6 flex items-start gap-3 rounded-2xl border border-red-200/80 bg-red-50/80 p-4 animate-in fade-in duration-200"
               >
-                <div className="mt-0.5 shrink-0">
-                  <AlertCircle
-                    size={18}
-                    strokeWidth={2}
-                    className="text-red-500"
-                  />
-                </div>
-
+                <AlertCircle
+                  size={19}
+                  strokeWidth={2}
+                  className="mt-0.5 shrink-0 text-red-500"
+                />
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-red-700">
+                  <p className="text-xs font-bold text-red-900">
                     Unable to sign in
                   </p>
-
-                  <p className="mt-0.5 text-xs leading-5 text-red-600">
+                  <p className="mt-0.5 text-xs font-medium leading-relaxed text-red-600">
                     {error}
                   </p>
                 </div>
               </div>
             )}
 
-            {/* --------------------------------
-                FORM
-            -------------------------------- */}
-
+            {/* Form */}
             <form onSubmit={handleSubmit} noValidate className="space-y-5">
-              {/* --------------------------------
-                  EMAIL
-              -------------------------------- */}
-
+              {/* Email Input */}
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-sm font-medium text-zinc-800"
+                  className="mb-2 block text-xs font-extrabold uppercase tracking-wider text-zinc-700"
                 >
                   Email address
                 </label>
@@ -257,8 +223,8 @@ export default function LoginPage() {
                 <div className="relative">
                   <Mail
                     size={18}
-                    strokeWidth={1.8}
-                    className={`pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 ${
+                    strokeWidth={2}
+                    className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors ${
                       showEmailError
                         ? "text-red-400"
                         : emailValid
@@ -273,12 +239,9 @@ export default function LoginPage() {
                     autoComplete="email"
                     inputMode="email"
                     value={email}
-                    onChange={(event) => {
-                      setEmail(event.target.value);
-
-                      if (error) {
-                        setError("");
-                      }
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (error) setError("");
                     }}
                     placeholder="admin@example.com"
                     disabled={loading}
@@ -286,56 +249,49 @@ export default function LoginPage() {
                     aria-describedby={
                       showEmailError ? "email-error" : undefined
                     }
-                    className={`h-11 w-full rounded-xl border bg-zinc-50 pl-10 pr-10 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:bg-white disabled:cursor-not-allowed disabled:opacity-60 ${
+                    className={`h-12 w-full rounded-2xl border bg-zinc-50/50 pl-11 pr-11 text-sm font-medium text-zinc-950 outline-none transition-all placeholder:text-zinc-400 focus:bg-white disabled:cursor-not-allowed disabled:opacity-50 ${
                       showEmailError
-                        ? "border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-2 focus:ring-red-100"
+                        ? "border-red-300 bg-red-50/30 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
                         : emailValid
-                          ? "border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50"
-                          : "border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
+                          ? "border-emerald-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10"
+                          : "border-zinc-200/90 focus:border-zinc-950 focus:ring-4 focus:ring-zinc-950/5"
                     }`}
                   />
 
-                  {/* Validation icon */}
-
                   {(showEmailError || emailValid) && (
-                    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
+                    <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2">
                       {showEmailError ? (
-                        <AlertCircle size={17} className="text-red-500" />
+                        <AlertCircle size={18} className="text-red-500" />
                       ) : (
-                        <CheckCircle2 size={17} className="text-emerald-500" />
+                        <CheckCircle2 size={18} className="text-emerald-500" />
                       )}
                     </div>
                   )}
                 </div>
 
-                {/* Inline validation */}
-
                 {showEmailError && (
                   <p
                     id="email-error"
-                    className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-red-600"
+                    className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-red-600"
                   >
-                    <AlertCircle size={13} />
-                    {emailError}
+                    <AlertCircle size={13} className="shrink-0" />
+                    <span>{emailError}</span>
                   </p>
                 )}
 
                 {!showEmailError && emailValid && (
-                  <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-emerald-600">
-                    <CheckCircle2 size={13} />
-                    Email address looks good.
+                  <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+                    <CheckCircle2 size={13} className="shrink-0" />
+                    <span>Email address looks good.</span>
                   </p>
                 )}
               </div>
 
-              {/* --------------------------------
-                  PASSWORD
-              -------------------------------- */}
-
+              {/* Password Input */}
               <div>
                 <label
                   htmlFor="password"
-                  className="mb-2 block text-sm font-medium text-zinc-800"
+                  className="mb-2 block text-xs font-extrabold uppercase tracking-wider text-zinc-700"
                 >
                   Password
                 </label>
@@ -343,8 +299,8 @@ export default function LoginPage() {
                 <div className="relative">
                   <LockKeyhole
                     size={18}
-                    strokeWidth={1.8}
-                    className={`pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 ${
+                    strokeWidth={2}
+                    className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors ${
                       showPasswordError
                         ? "text-red-400"
                         : passwordValid
@@ -358,12 +314,9 @@ export default function LoginPage() {
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     value={password}
-                    onChange={(event) => {
-                      setPassword(event.target.value);
-
-                      if (error) {
-                        setError("");
-                      }
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (error) setError("");
                     }}
                     placeholder="Enter your password"
                     disabled={loading}
@@ -371,118 +324,102 @@ export default function LoginPage() {
                     aria-describedby={
                       showPasswordError ? "password-error" : undefined
                     }
-                    className={`h-11 w-full rounded-xl border bg-zinc-50 pl-10 pr-20 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:bg-white disabled:cursor-not-allowed disabled:opacity-60 ${
+                    className={`h-12 w-full rounded-2xl border bg-zinc-50/50 pl-11 pr-20 text-sm font-medium text-zinc-950 outline-none transition-all placeholder:text-zinc-400 focus:bg-white disabled:cursor-not-allowed disabled:opacity-50 ${
                       showPasswordError
-                        ? "border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-2 focus:ring-red-100"
+                        ? "border-red-300 bg-red-50/30 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
                         : passwordValid
-                          ? "border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-50"
-                          : "border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
+                          ? "border-emerald-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10"
+                          : "border-zinc-200/90 focus:border-zinc-950 focus:ring-4 focus:ring-zinc-950/5"
                     }`}
                   />
 
                   <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1">
-                    {/* Password validation */}
-
                     {passwordValid && (
-                      <CheckCircle2 size={17} className="text-emerald-500" />
+                      <CheckCircle2 size={18} className="text-emerald-500" />
                     )}
-
-                    {/* Show / hide */}
 
                     <button
                       type="button"
-                      onClick={() => setShowPassword((value) => !value)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                       disabled={loading}
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
-                      className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700 disabled:cursor-not-allowed"
+                      className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
 
-                {/* Inline validation */}
-
                 {showPasswordError && (
                   <p
                     id="password-error"
-                    className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-red-600"
+                    className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-red-600"
                   >
-                    <AlertCircle size={13} />
-                    {passwordError}
+                    <AlertCircle size={13} className="shrink-0" />
+                    <span>{passwordError}</span>
                   </p>
                 )}
 
                 {!showPasswordError && passwordValid && (
-                  <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-emerald-600">
-                    <CheckCircle2 size={13} />
-                    Password meets the minimum requirement.
+                  <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+                    <CheckCircle2 size={13} className="shrink-0" />
+                    <span>Password meets minimum requirement.</span>
                   </p>
                 )}
 
                 {!password && !submitted && (
-                  <p className="mt-1.5 text-xs text-zinc-400">
+                  <p className="mt-2 text-xs font-medium text-zinc-400">
                     Minimum 6 characters.
                   </p>
                 )}
               </div>
 
-              {/* --------------------------------
-                  SUBMIT
-              -------------------------------- */}
-
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="group flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-zinc-950 px-4 text-sm font-semibold text-white shadow-sm transition-all hover:bg-zinc-800 hover:shadow-md active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+                className="group relative flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-zinc-950 px-5 text-sm font-bold text-white shadow-lg shadow-zinc-950/15 transition-all hover:bg-zinc-800 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
               >
                 {loading ? (
                   <>
-                    <Loader2 size={17} className="animate-spin" />
-                    Signing in...
+                    <Loader2 size={18} className="animate-spin text-white" />
+                    <span>Signing in to portal...</span>
                   </>
                 ) : (
                   <>
-                    Sign in
-                    <span className="transition-transform group-hover:translate-x-0.5">
-                      →
-                    </span>
+                    <span>Sign In</span>
+                    <ArrowRight
+                      size={17}
+                      className="transition-transform duration-200 group-hover:translate-x-1"
+                    />
                   </>
                 )}
               </button>
             </form>
 
-            {/* --------------------------------
-                SECURITY NOTE
-            -------------------------------- */}
-
-            <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-zinc-100 bg-zinc-50 px-3.5 py-3">
+            {/* Security Note */}
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-zinc-100 bg-zinc-50/80 p-3.5">
               <ShieldCheck
-                size={15}
-                strokeWidth={1.8}
+                size={17}
+                strokeWidth={2}
                 className="mt-0.5 shrink-0 text-zinc-500"
               />
-
-              <p className="text-[11px] leading-4 text-zinc-500">
+              <p className="text-xs font-medium leading-relaxed text-zinc-500">
                 This area is restricted to authorized FinTrack administrators.
                 Keep your credentials secure.
               </p>
             </div>
           </div>
 
-          {/* --------------------------------
-              FOOTER
-          -------------------------------- */}
-
-          <div className="mt-6 text-center">
-            <p className="text-xs text-zinc-400">
-              © {new Date().getFullYear()} FinTrack
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-xs font-semibold text-zinc-400">
+              © {new Date().getFullYear()} FinTrack Control Center
             </p>
-
-            <p className="mt-1 text-[10px] text-zinc-300">
-              Administration Portal
+            <p className="mt-1 text-[11px] font-medium text-zinc-400">
+              Authorized Administration Portal
             </p>
           </div>
         </div>

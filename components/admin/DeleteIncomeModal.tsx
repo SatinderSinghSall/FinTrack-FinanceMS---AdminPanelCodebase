@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Loader2, X } from "lucide-react";
+import {
+  AlertTriangle,
+  Loader2,
+  X,
+  Trash2,
+  TrendingUp,
+  ShieldAlert,
+} from "lucide-react";
 
 import { adminApi } from "@/lib/api";
 
@@ -24,7 +31,6 @@ export default function DeleteIncomeModal({
   onDeleted,
 }: DeleteIncomeModalProps) {
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
 
   if (!income) {
@@ -42,83 +48,106 @@ export default function DeleteIncomeModal({
 
       onDeleted();
       onClose();
-    } catch (error) {
-      setError(
-        error instanceof Error ? error.message : "Unable to delete income.",
-      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to delete income.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-[2px]"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget && !loading) {
-          onClose();
-        }
-      }}
-    >
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl">
-        <div className="p-5 sm:p-6">
+    /* Backdrop layer - Glassmorphic overlay */
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 p-4 backdrop-blur-md transition-all">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-zinc-200/80 bg-white/95 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] backdrop-blur-xl">
+        {/* Top Danger Accent Bar */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-red-500 via-rose-500 to-red-600" />
+
+        <div className="p-6">
+          {/* Header Icon & Close Button */}
           <div className="flex items-start justify-between">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50">
-              <AlertTriangle size={20} className="text-red-600" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600 border border-red-200/60 shadow-sm">
+              <AlertTriangle size={22} strokeWidth={2} />
             </div>
 
             <button
               type="button"
               disabled={loading}
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700 disabled:opacity-50"
+              className="group flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-zinc-200/60 bg-zinc-50/50 text-zinc-400 transition-all duration-200 hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-700 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+              aria-label="Close"
             >
-              <X size={17} />
+              <X
+                size={18}
+                strokeWidth={2}
+                className="transition-transform duration-200 group-hover:rotate-90"
+              />
             </button>
           </div>
 
-          <h2 className="mt-5 text-lg font-semibold text-zinc-900">
-            Delete Income?
-          </h2>
+          {/* Title & Description */}
+          <div className="mt-4">
+            <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+              Delete Income Record?
+            </h2>
 
-          <p className="mt-2 text-sm leading-6 text-zinc-500">
-            You are about to permanently delete this income record. This action
-            cannot be undone.
-          </p>
+            <p className="mt-1.5 text-xs font-medium leading-relaxed text-zinc-500">
+              You are about to permanently delete this income entry. This action
+              cannot be undone.
+            </p>
+          </div>
 
-          <div className="mt-4 space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-            <div>
-              <p className="text-xs text-zinc-400">Source</p>
-
-              <p className="mt-0.5 text-sm font-semibold text-zinc-900">
-                {income.source || "Unknown source"}
-              </p>
+          {/* Income Details Target Box */}
+          <div className="mt-5 space-y-3 rounded-2xl border border-red-100 bg-red-50/40 p-4">
+            <div className="flex items-center gap-2 text-red-700 font-semibold uppercase tracking-wider text-[11px]">
+              <TrendingUp size={13} />
+              <span>Income Target</span>
             </div>
 
-            <div>
-              <p className="text-xs text-zinc-400">Amount</p>
+            <div className="flex items-start justify-between gap-2 pt-1">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+                  Source
+                </p>
+                <p className="mt-0.5 text-sm font-semibold text-zinc-900">
+                  {income.source || "Unknown source"}
+                </p>
+              </div>
 
-              <p className="mt-0.5 text-sm font-semibold text-emerald-600">
-                {typeof income.amount === "number"
-                  ? `₹${income.amount.toLocaleString("en-IN")}`
-                  : "—"}
-              </p>
+              <div className="text-right">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+                  Amount
+                </p>
+                <p className="mt-0.5 text-sm font-semibold text-emerald-600 font-mono">
+                  {typeof income.amount === "number"
+                    ? `₹${income.amount.toLocaleString("en-IN")}`
+                    : "—"}
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-red-100/60 flex items-center justify-between">
+              <span className="font-mono text-[11px] font-medium text-zinc-400">
+                ID: {income._id}
+              </span>
             </div>
           </div>
 
+          {/* Error Message Display */}
           {error && (
-            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-5 text-red-600">
-              {error}
+            <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-red-200/80 bg-red-50 p-4 text-xs font-medium text-red-700 shadow-sm">
+              <ShieldAlert size={16} className="mt-0.5 shrink-0 text-red-600" />
+              <span className="leading-relaxed">{error}</span>
             </div>
           )}
         </div>
 
-        <div className="flex flex-col-reverse gap-2 border-t border-zinc-100 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+        {/* Footer Actions */}
+        <div className="flex flex-col-reverse gap-2 border-t border-zinc-100 bg-zinc-50/50 px-6 py-4 sm:flex-row sm:justify-end sm:gap-3">
           <button
             type="button"
             disabled={loading}
             onClick={onClose}
-            className="h-10 rounded-xl border border-zinc-200 px-5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:opacity-50"
+            className="inline-flex h-10 cursor-pointer items-center justify-center rounded-xl border border-zinc-200/80 bg-white px-5 text-sm font-semibold text-zinc-700 shadow-sm transition-all duration-200 hover:bg-zinc-100 hover:text-zinc-900 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
           >
             Cancel
           </button>
@@ -127,11 +156,19 @@ export default function DeleteIncomeModal({
             type="button"
             disabled={loading}
             onClick={handleDelete}
-            className="flex h-10 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl bg-red-600 px-6 text-sm font-semibold text-white shadow-lg shadow-red-600/20 transition-all duration-200 hover:bg-red-700 hover:shadow-red-600/30 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading && <Loader2 size={16} className="animate-spin" />}
-
-            {loading ? "Deleting..." : "Delete Income"}
+            {loading ? (
+              <>
+                <Loader2 size={16} className="animate-spin" />
+                <span>Deleting...</span>
+              </>
+            ) : (
+              <>
+                <Trash2 size={16} />
+                <span>Delete Income</span>
+              </>
+            )}
           </button>
         </div>
       </div>

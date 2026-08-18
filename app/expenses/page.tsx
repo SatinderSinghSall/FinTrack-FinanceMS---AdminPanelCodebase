@@ -106,6 +106,16 @@ export default function ExpensesPage() {
     loadExpenses();
   }, [page]);
 
+  // Prevent background scrolling when any modal is open
+  const isModalOpen = Boolean(viewExpense || editExpense || deleteExpense);
+
+  useEffect(() => {
+    document.body.style.overflow = isModalOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isModalOpen]);
+
   const handleView = async (expense: Expense) => {
     try {
       setError("");

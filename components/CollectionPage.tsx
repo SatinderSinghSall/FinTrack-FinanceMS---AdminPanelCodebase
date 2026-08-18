@@ -22,8 +22,12 @@ type CollectionPageProps<T extends Record<string, unknown>> = {
   page: number;
   totalPages: number;
   total: number;
+  limit?: number;
 
   onPageChange: (page: number) => void;
+
+  emptyMessage?: string;
+  showSerialNumber?: boolean;
 
   children?: ReactNode;
 };
@@ -41,30 +45,38 @@ export default function CollectionPage<T extends Record<string, unknown>>({
   page,
   totalPages,
   total,
+  limit = 10,
   onPageChange,
+  emptyMessage,
+  showSerialNumber = true,
   children,
 }: CollectionPageProps<T>) {
   return (
     <AdminShell>
-      <div className="space-y-6">
-        {/* Heading */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="space-y-8 pb-10">
+        {/* Heading & Top Actions */}
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-zinc-500">Database</p>
+            <span className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-zinc-400">
+              Database Management
+            </span>
 
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">
+            <h1 className="mt-1 text-3xl font-black tracking-tight text-zinc-950 sm:text-4xl">
               {title}
             </h1>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
+            <p className="mt-2 max-w-2xl text-sm font-medium leading-relaxed text-zinc-500">
               {description}
             </p>
           </div>
 
-          {children}
+          {/* Action Slot (e.g., Add New Record, Export, Filters) */}
+          {children && (
+            <div className="flex shrink-0 items-center gap-3">{children}</div>
+          )}
         </div>
 
-        {/* Table */}
+        {/* Data Table Container */}
         <DataTable
           columns={columns}
           data={data}
@@ -76,7 +88,10 @@ export default function CollectionPage<T extends Record<string, unknown>>({
           page={page}
           totalPages={totalPages}
           total={total}
+          limit={limit}
           onPageChange={onPageChange}
+          emptyMessage={emptyMessage}
+          showSerialNumber={showSerialNumber}
         />
       </div>
     </AdminShell>
