@@ -18,6 +18,8 @@ import {
   UserRound,
   ShieldAlert,
   AlertTriangle,
+  MessageSquare,
+  Shield,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ElementType } from "react";
@@ -52,6 +54,16 @@ const mainNavigation = [
 
 // Database folders with specific category icons
 const databaseFolders = [
+  {
+    key: "admins",
+    folderLabel: "Admin Management",
+    folderIcon: Shield,
+    item: {
+      label: "Admins",
+      href: "/admins",
+      icon: Shield,
+    },
+  },
   {
     key: "users",
     folderLabel: "User Management",
@@ -112,6 +124,16 @@ const databaseFolders = [
       icon: CreditCard,
     },
   },
+  {
+    key: "feedbacks",
+    folderLabel: "Feedback Management",
+    folderIcon: MessageSquare,
+    item: {
+      label: "Feedbacks",
+      href: "/feedbacks",
+      icon: MessageSquare,
+    },
+  },
 ];
 
 export default function AdminSidebar({
@@ -128,12 +150,14 @@ export default function AdminSidebar({
 
   // Dynamic open states for folders
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({
+    admins: false,
     users: false,
     expenses: false,
     incomes: false,
     budgets: false,
     savings: false,
     subscriptions: false,
+    feedbacks: false,
   });
 
   // Auto-expand folder if current route matches its child route

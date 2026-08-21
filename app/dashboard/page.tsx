@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 import {
+  ArrowUpRight,
   CreditCard,
+  MessageSquare,
   PiggyBank,
   Receipt,
   RefreshCw,
+  Shield,
   TrendingDown,
   TrendingUp,
   Users,
@@ -20,12 +24,14 @@ import { adminApi } from "@/lib/api";
 
 type DashboardData = {
   overview: {
+    admins: number;
     users: number;
     budgets: number;
     expenses: number;
     incomes: number;
     savings: number;
     subscriptions: number;
+    feedbacks: number;
   };
 
   financial: {
@@ -72,12 +78,14 @@ type DashboardResponse = {
 
 const initialData: DashboardData = {
   overview: {
+    admins: 0,
     users: 0,
     budgets: 0,
     expenses: 0,
     incomes: 0,
     savings: 0,
     subscriptions: 0,
+    feedbacks: 0,
   },
 
   financial: {
@@ -148,34 +156,52 @@ const formatDate = (date?: string) => {
 
 const statCards = [
   {
+    key: "admins",
+    label: "Admins",
+    icon: Shield,
+    href: "/admins",
+  },
+  {
     key: "users",
     label: "Users",
     icon: Users,
+    href: "/users",
   },
   {
     key: "incomes",
     label: "Income Records",
     icon: TrendingUp,
+    href: "/incomes",
   },
   {
     key: "expenses",
     label: "Expenses",
     icon: Receipt,
+    href: "/expenses",
   },
   {
     key: "savings",
     label: "Savings",
     icon: PiggyBank,
+    href: "/savings",
   },
   {
     key: "budgets",
     label: "Budgets",
     icon: WalletCards,
+    href: "/budgets",
   },
   {
     key: "subscriptions",
     label: "Subscriptions",
     icon: CreditCard,
+    href: "/subscriptions",
+  },
+  {
+    key: "feedbacks",
+    label: "Feedbacks",
+    icon: MessageSquare,
+    href: "/feedbacks",
   },
 ] as const;
 
@@ -230,7 +256,7 @@ export default function DashboardPage() {
             type="button"
             onClick={loadDashboard}
             disabled={loading}
-            className="flex h-10 w-fit items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex h-10 w-fit items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
           >
             <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
             Refresh
@@ -246,29 +272,39 @@ export default function DashboardPage() {
 
         {/* Overview */}
         <section>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {statCards.map((stat) => {
               const Icon = stat.icon;
-
               const value = data.overview[stat.key];
 
               return (
-                <div
+                <Link
                   key={stat.key}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5"
+                  href={stat.href}
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md sm:p-6"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-100">
-                    <Icon size={17} className="text-zinc-700" />
+                  {/* Top row: Icon & Interactive Arrow */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-zinc-100/80 text-zinc-800 transition-all duration-300 group-hover:bg-zinc-900 group-hover:text-white group-hover:scale-105">
+                      <Icon size={20} />
+                    </div>
+
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-50 text-zinc-400 transition-all duration-300 group-hover:bg-zinc-100 group-hover:text-zinc-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                      <ArrowUpRight size={16} />
+                    </div>
                   </div>
 
-                  <p className="mt-4 text-xs font-medium text-zinc-400">
-                    {stat.label}
-                  </p>
+                  {/* Bottom section: Label and Value */}
+                  <div className="mt-6">
+                    <p className="text-xs font-medium tracking-wide text-zinc-400 uppercase">
+                      {stat.label}
+                    </p>
 
-                  <p className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
-                    {loading ? "—" : value.toLocaleString("en-IN")}
-                  </p>
-                </div>
+                    <p className="mt-1 text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
+                      {loading ? "—" : value.toLocaleString("en-IN")}
+                    </p>
+                  </div>
+                </Link>
               );
             })}
           </div>
