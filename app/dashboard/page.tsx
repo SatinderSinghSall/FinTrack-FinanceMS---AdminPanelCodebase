@@ -15,6 +15,7 @@ import {
   TrendingUp,
   Users,
   WalletCards,
+  Smartphone,
 } from "lucide-react";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -32,6 +33,7 @@ type DashboardData = {
     savings: number;
     subscriptions: number;
     feedbacks: number;
+    appConfigs: number;
   };
 
   financial: {
@@ -86,6 +88,7 @@ const initialData: DashboardData = {
     savings: 0,
     subscriptions: 0,
     feedbacks: 0,
+    appConfigs: 0,
   },
 
   financial: {
@@ -160,6 +163,12 @@ const statCards = [
     label: "Admins",
     icon: Shield,
     href: "/admins",
+  },
+  {
+    key: "appConfigs",
+    label: "App Configuration",
+    icon: Smartphone,
+    href: "/appconfigs",
   },
   {
     key: "users",

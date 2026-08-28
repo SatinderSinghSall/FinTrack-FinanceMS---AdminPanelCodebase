@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
+  Smartphone,
   Users,
   WalletCards,
   Receipt,
@@ -52,6 +53,14 @@ const mainNavigation = [
   },
 ];
 
+const appNavigation = [
+  {
+    label: "App Version",
+    href: "/app-version",
+    icon: Smartphone,
+  },
+];
+
 // Database folders with specific category icons
 const databaseFolders = [
   {
@@ -62,6 +71,16 @@ const databaseFolders = [
       label: "Admins",
       href: "/admins",
       icon: Shield,
+    },
+  },
+  {
+    key: "appconfigs",
+    folderLabel: "App Management",
+    folderIcon: Smartphone,
+    item: {
+      label: "App Configurations",
+      href: "/appconfigs",
+      icon: Smartphone,
     },
   },
   {
@@ -360,6 +379,21 @@ export default function AdminSidebar({
             </div>
             <div className="space-y-1.5">
               {mainNavigation.map((item) => renderNavItem(item))}
+            </div>
+          </section>
+
+          {/* App Management Section */}
+          <section className="mt-8">
+            <div className="mb-3.5 flex items-center gap-2 px-3">
+              <span className="h-px w-3 bg-zinc-200" />
+
+              <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-zinc-400">
+                App Management
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              {appNavigation.map((item) => renderNavItem(item))}
             </div>
           </section>
 
