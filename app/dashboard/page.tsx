@@ -35,6 +35,7 @@ type DashboardData = {
     subscriptions: number;
     feedbacks: number;
     appConfigs: number;
+    announcements: number;
   };
 
   financial: {
@@ -90,6 +91,7 @@ const initialData: DashboardData = {
     subscriptions: 0,
     feedbacks: 0,
     appConfigs: 0,
+    announcements: 0,
   },
 
   financial: {
