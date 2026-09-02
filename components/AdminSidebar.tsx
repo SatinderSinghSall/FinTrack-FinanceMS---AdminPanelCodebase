@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Smartphone,
+  Megaphone,
   Users,
   WalletCards,
   Receipt,
@@ -58,6 +59,11 @@ const appNavigation = [
     label: "App Version",
     href: "/app-version",
     icon: Smartphone,
+  },
+  {
+    label: "Add Announcement",
+    href: "/add-announcements",
+    icon: Megaphone,
   },
 ];
 
@@ -151,6 +157,16 @@ const databaseFolders = [
       label: "Feedbacks",
       href: "/feedbacks",
       icon: MessageSquare,
+    },
+  },
+  {
+    key: "announcements",
+    folderLabel: "Announcement Management",
+    folderIcon: Megaphone,
+    item: {
+      label: "Announcements",
+      href: "/announcements",
+      icon: Megaphone,
     },
   },
 ];

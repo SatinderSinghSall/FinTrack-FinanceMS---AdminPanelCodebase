@@ -16,6 +16,7 @@ import {
   Users,
   WalletCards,
   Smartphone,
+  Megaphone,
 } from "lucide-react";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -211,6 +212,12 @@ const statCards = [
     label: "Feedbacks",
     icon: MessageSquare,
     href: "/feedbacks",
+  },
+  {
+    key: "announcements",
+    label: "Announcements",
+    icon: Megaphone,
+    href: "/announcements",
   },
 ] as const;
 
