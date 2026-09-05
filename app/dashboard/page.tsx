@@ -17,6 +17,7 @@ import {
   WalletCards,
   Smartphone,
   Megaphone,
+  Lightbulb,
 } from "lucide-react";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -36,6 +37,7 @@ type DashboardData = {
     feedbacks: number;
     appConfigs: number;
     announcements: number;
+    financialTips: number;
   };
 
   financial: {
@@ -92,6 +94,7 @@ const initialData: DashboardData = {
     feedbacks: 0,
     appConfigs: 0,
     announcements: 0,
+    financialTips: 0,
   },
 
   financial: {
@@ -174,6 +177,24 @@ const statCards = [
     href: "/appconfigs",
   },
   {
+    key: "feedbacks",
+    label: "Feedbacks",
+    icon: MessageSquare,
+    href: "/feedbacks",
+  },
+  {
+    key: "announcements",
+    label: "Announcements",
+    icon: Megaphone,
+    href: "/announcements",
+  },
+  {
+    key: "financialTips",
+    label: "Financial Tips",
+    icon: Lightbulb,
+    href: "/financial-tips",
+  },
+  {
     key: "users",
     label: "Users",
     icon: Users,
@@ -208,18 +229,6 @@ const statCards = [
     label: "Subscriptions",
     icon: CreditCard,
     href: "/subscriptions",
-  },
-  {
-    key: "feedbacks",
-    label: "Feedbacks",
-    icon: MessageSquare,
-    href: "/feedbacks",
-  },
-  {
-    key: "announcements",
-    label: "Announcements",
-    icon: Megaphone,
-    href: "/announcements",
   },
 ] as const;
 

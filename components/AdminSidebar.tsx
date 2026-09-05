@@ -22,6 +22,7 @@ import {
   AlertTriangle,
   MessageSquare,
   Shield,
+  Lightbulb,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ElementType } from "react";
@@ -65,6 +66,11 @@ const appNavigation = [
     href: "/add-announcements",
     icon: Megaphone,
   },
+  {
+    label: "Add Financial Tip",
+    href: "/add-financial-tips",
+    icon: Lightbulb,
+  },
 ];
 
 // Database folders with specific category icons
@@ -87,6 +93,26 @@ const databaseFolders = [
       label: "App Configurations",
       href: "/appconfigs",
       icon: Smartphone,
+    },
+  },
+  {
+    key: "announcements",
+    folderLabel: "Announcement Management",
+    folderIcon: Megaphone,
+    item: {
+      label: "Announcements",
+      href: "/announcements",
+      icon: Megaphone,
+    },
+  },
+  {
+    key: "financialtips",
+    folderLabel: "Financial Tips Management",
+    folderIcon: Lightbulb,
+    item: {
+      label: "Financial Tips",
+      href: "/financial-tips",
+      icon: Lightbulb,
     },
   },
   {
@@ -157,16 +183,6 @@ const databaseFolders = [
       label: "Feedbacks",
       href: "/feedbacks",
       icon: MessageSquare,
-    },
-  },
-  {
-    key: "announcements",
-    folderLabel: "Announcement Management",
-    folderIcon: Megaphone,
-    item: {
-      label: "Announcements",
-      href: "/announcements",
-      icon: Megaphone,
     },
   },
 ];
