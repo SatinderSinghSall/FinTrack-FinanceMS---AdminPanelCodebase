@@ -23,6 +23,7 @@ import {
   MessageSquare,
   Shield,
   Lightbulb,
+  Wrench,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ElementType } from "react";
@@ -71,6 +72,11 @@ const appNavigation = [
     href: "/add-financial-tips",
     icon: Lightbulb,
   },
+  {
+    label: "Add App Maintenance",
+    href: "/add-maintenance",
+    icon: Wrench,
+  },
 ];
 
 // Database folders with specific category icons
@@ -112,6 +118,16 @@ const databaseFolders = [
     item: {
       label: "Financial Tips",
       href: "/financial-tips",
+      icon: Lightbulb,
+    },
+  },
+  {
+    key: "maintenance",
+    folderLabel: "App Maintenance Management",
+    folderIcon: Wrench,
+    item: {
+      label: "Add App Management",
+      href: "/maintenance",
       icon: Lightbulb,
     },
   },

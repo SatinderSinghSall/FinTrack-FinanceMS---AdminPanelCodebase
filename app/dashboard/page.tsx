@@ -18,6 +18,7 @@ import {
   Smartphone,
   Megaphone,
   Lightbulb,
+  Wrench,
 } from "lucide-react";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -38,6 +39,7 @@ type DashboardData = {
     appConfigs: number;
     announcements: number;
     financialTips: number;
+    maintenance: number;
   };
 
   financial: {
@@ -95,6 +97,7 @@ const initialData: DashboardData = {
     appConfigs: 0,
     announcements: 0,
     financialTips: 0,
+    maintenance: 0,
   },
 
   financial: {
@@ -175,6 +178,12 @@ const statCards = [
     label: "App Configuration",
     icon: Smartphone,
     href: "/appconfigs",
+  },
+  {
+    key: "maintenance",
+    label: "Maintenance",
+    icon: Wrench,
+    href: "/maintenance",
   },
   {
     key: "feedbacks",
