@@ -820,10 +820,12 @@ export default function EditEmailCampaignModal({
 
                     <ReadOnlyCard
                       label="Status"
-                      value={originalCampaign?.status || campaign.status}
+                      value={
+                        originalCampaign?.status || campaign.status || "draft"
+                      }
                       badge
                       badgeClass={statusClass(
-                        originalCampaign?.status || campaign.status,
+                        originalCampaign?.status || campaign.status || "draft",
                       )}
                     />
 
