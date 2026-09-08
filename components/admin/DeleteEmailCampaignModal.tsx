@@ -16,11 +16,11 @@ import { useEffect, useState } from "react";
 
 import { adminApi } from "@/lib/api";
 
-type EmailCampaign = {
+type EmailCampaignSummary = {
   _id: string;
   campaignId: string;
   name: string;
-  status: "active" | "completed";
+  status?: "draft" | "active" | "completed";
   sentCount?: number;
   failedCount?: number;
   pendingCount?: number;
@@ -29,7 +29,7 @@ type EmailCampaign = {
 };
 
 type DeleteEmailCampaignModalProps = {
-  campaign: EmailCampaign | null;
+  campaign: EmailCampaignSummary | null;
   onClose: () => void;
   onDeleted: (campaignId: string) => void | Promise<void>;
 };
@@ -298,7 +298,7 @@ export default function DeleteEmailCampaignModal({
                       }`}
                     />
 
-                    {campaign.status}
+                    {campaign.status || "draft"}
                   </span>
                 </div>
               </div>
