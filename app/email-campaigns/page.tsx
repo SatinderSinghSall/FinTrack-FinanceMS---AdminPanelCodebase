@@ -31,6 +31,55 @@ type EmailCampaign = {
   updatedAt?: string;
 };
 
+/*
+ * Full campaign details returned by:
+ *
+ * GET /admin/email-campaigns/:id
+ */
+type EmailCampaignDetails = {
+  campaign: {
+    _id: string;
+    campaignId: string;
+    name: string;
+    subject: string;
+    htmlContent: string;
+    textContent?: string;
+    buttonText?: string;
+    buttonUrl?: string;
+    status: CampaignStatus;
+    sentCount?: number;
+    failedCount?: number;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+
+  statistics: {
+    sentCount: number;
+    failedCount: number;
+    pendingCount: number;
+    dailyLimit: number;
+    sentToday: number;
+    remainingToday: number;
+  };
+
+  recipients: Array<{
+    _id: string;
+    email: string;
+    status: "pending" | "sent" | "failed";
+    resendEmailId?: string | null;
+    sentAt?: string | null;
+    error?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
+
+    user?: {
+      _id?: string;
+      name?: string;
+      email?: string;
+    } | null;
+  }>;
+};
+
 type EmailCampaignsResponse = {
   success: boolean;
   data: EmailCampaign[];
@@ -63,7 +112,14 @@ export default function EmailCampaignsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [viewCampaign, setViewCampaign] = useState<EmailCampaign | null>(null);
+  /*
+   * IMPORTANT:
+   * View uses the full campaign details response,
+   * not the basic collection/list type.
+   */
+  const [viewCampaign, setViewCampaign] = useState<EmailCampaignDetails | null>(
+    null,
+  );
 
   const [editCampaign, setEditCampaign] = useState<EmailCampaign | null>(null);
 
@@ -118,6 +174,14 @@ export default function EmailCampaignsPage() {
 
   /*
    * View campaign
+   *
+   * This endpoint returns:
+   *
+   * {
+   *   campaign,
+   *   statistics,
+   *   recipients
+   * }
    */
   const handleView = async (campaign: EmailCampaign) => {
     try {
@@ -251,6 +315,7 @@ export default function EmailCampaignsPage() {
       render: (item) => (
         <span className="text-zinc-600">
           {item.sentToday ?? 0}
+
           <span className="ml-1 text-xs text-zinc-400">
             / {item.dailyLimit ?? 100}
           </span>
@@ -295,6 +360,7 @@ export default function EmailCampaignsPage() {
         return (
           <div className="flex items-center gap-1">
             {/* View */}
+
             <button
               type="button"
               title="View email campaign"
@@ -306,6 +372,7 @@ export default function EmailCampaignsPage() {
             </button>
 
             {/* Edit */}
+
             <button
               type="button"
               title={
@@ -321,6 +388,7 @@ export default function EmailCampaignsPage() {
             </button>
 
             {/* Send */}
+
             <button
               type="button"
               title={
@@ -336,6 +404,7 @@ export default function EmailCampaignsPage() {
             </button>
 
             {/* Delete */}
+
             <button
               type="button"
               title="Delete email campaign"
