@@ -77,6 +77,11 @@ const appNavigation = [
     href: "/add-maintenance",
     icon: Wrench,
   },
+  {
+    label: "Send Email Campaigns",
+    href: "/send-email-campaigns",
+    icon: Mail,
+  },
 ];
 
 // Database folders with specific category icons
@@ -129,6 +134,16 @@ const databaseFolders = [
       label: "Add App Management",
       href: "/maintenance",
       icon: Lightbulb,
+    },
+  },
+  {
+    key: "email-campaigns",
+    folderLabel: "Email Campaign Management",
+    folderIcon: Mail,
+    item: {
+      label: "Email Campaigns",
+      href: "/email-campaigns",
+      icon: Mail,
     },
   },
   {

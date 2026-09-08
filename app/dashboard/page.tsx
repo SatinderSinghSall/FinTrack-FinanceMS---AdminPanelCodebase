@@ -19,6 +19,8 @@ import {
   Megaphone,
   Lightbulb,
   Wrench,
+  UsersRound,
+  Mail,
 } from "lucide-react";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -40,6 +42,8 @@ type DashboardData = {
     announcements: number;
     financialTips: number;
     maintenance: number;
+    emailCampaigns: number;
+    emailCampaignRecipients: number;
   };
 
   financial: {
@@ -98,6 +102,8 @@ const initialData: DashboardData = {
     announcements: 0,
     financialTips: 0,
     maintenance: 0,
+    emailCampaigns: 0,
+    emailCampaignRecipients: 0,
   },
 
   financial: {
@@ -184,6 +190,18 @@ const statCards = [
     label: "Maintenance",
     icon: Wrench,
     href: "/maintenance",
+  },
+  {
+    key: "emailCampaigns",
+    label: "Email Campaigns",
+    icon: Mail,
+    href: "/email-campaigns",
+  },
+  {
+    key: "emailCampaignRecipients",
+    label: "Campaign Recipients",
+    icon: UsersRound,
+    href: "/email-campaigns",
   },
   {
     key: "feedbacks",
