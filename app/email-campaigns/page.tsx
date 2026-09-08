@@ -20,13 +20,22 @@ type EmailCampaign = {
   campaignId: string;
   name: string;
   subject?: string;
+
+  htmlContent?: string;
+  textContent?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+
   status?: CampaignStatus;
+
   sentCount?: number;
   failedCount?: number;
   pendingCount?: number;
+
   dailyLimit?: number;
   sentToday?: number;
   remainingToday?: number;
+
   createdAt?: string;
   updatedAt?: string;
 };
