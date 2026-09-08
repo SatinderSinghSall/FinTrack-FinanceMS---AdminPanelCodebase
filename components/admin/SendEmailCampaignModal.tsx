@@ -31,8 +31,24 @@ type EmailCampaign = {
   remainingToday?: number;
 };
 
+type EmailCampaignSummary = {
+  _id: string;
+  campaignId: string;
+  name: string;
+  subject?: string;
+  status?: "draft" | "active" | "completed";
+
+  sentCount?: number;
+  failedCount?: number;
+  pendingCount?: number;
+
+  dailyLimit?: number;
+  sentToday?: number;
+  remainingToday?: number;
+};
+
 type SendEmailCampaignModalProps = {
-  campaign: EmailCampaign | null;
+  campaign: EmailCampaignSummary | null;
   onClose: () => void;
   onSent: () => void | Promise<void>;
 };
