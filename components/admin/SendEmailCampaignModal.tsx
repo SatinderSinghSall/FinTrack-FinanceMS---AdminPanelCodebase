@@ -325,7 +325,7 @@ export default function SendEmailCampaignModal({
                       )}
                     </div>
 
-                    <StatusBadge status={campaign.status} />
+                    <StatusBadge status={campaign.status || "draft"} />
                   </div>
 
                   <div className="mt-4 flex items-start gap-2 border-t border-zinc-200 pt-3">
