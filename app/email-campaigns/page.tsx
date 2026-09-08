@@ -42,13 +42,22 @@ type EmailCampaignDetails = {
     campaignId: string;
     name: string;
     subject: string;
+
     htmlContent: string;
-    textContent?: string;
-    buttonText?: string;
-    buttonUrl?: string;
+    textContent: string;
+    buttonText: string;
+    buttonUrl: string;
+
     status: CampaignStatus;
-    sentCount?: number;
-    failedCount?: number;
+
+    sentCount: number;
+    failedCount: number;
+    pendingCount: number;
+
+    dailyLimit: number;
+    sentToday: number;
+    remainingToday: number;
+
     createdAt?: string;
     updatedAt?: string;
   };
@@ -64,19 +73,21 @@ type EmailCampaignDetails = {
 
   recipients: Array<{
     _id: string;
+    campaign: string;
+    user: string | null;
     email: string;
+
     status: "pending" | "sent" | "failed";
+
     resendEmailId?: string | null;
     sentAt?: string | null;
     error?: string | null;
+
     createdAt?: string;
     updatedAt?: string;
 
-    user?: {
-      _id?: string;
-      name?: string;
-      email?: string;
-    } | null;
+    userName?: string | null;
+    userEmail?: string | null;
   }>;
 };
 
